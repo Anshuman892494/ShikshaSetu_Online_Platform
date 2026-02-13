@@ -283,25 +283,6 @@ const Courses = () => {
                         ))}
                     </div>
 
-                    <div className="mt-20 relative bg-gradient-to-br from-[#1c1f26] to-[#15171c] rounded-[2rem] p-10 border border-gray-800 flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 rounded-full blur-[80px]"></div>
-                        <div className="relative z-10 flex-1">
-                            <h2 className="text-3xl font-bold text-white mb-4">
-                                Let's us <span className="text-green-500">guide you</span> to kick start your career
-                            </h2>
-                            <p className="text-gray-400 text-lg max-w-xl font-light">
-                                We understand sometimes it feels like what should I pick and from where to start
-                            </p>
-                        </div>
-                        <div className="relative z-10 flex gap-4">
-                            <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-xl transition-all shadow-xl shadow-green-900/20 flex items-center gap-2">
-                                Guide Me 🤩
-                            </button>
-                            <button className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-4 px-10 rounded-xl border border-gray-700 transition-all">
-                                Let Me Explore
-                            </button>
-                        </div>
-                    </div>
                 </main>
             </div>
         </div>

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { addStudent, addStudentsBulk, getAllStudents, getStudentById, updateStudent, deleteStudent, loginStudent, resetPassword, verifyStudentDetails, markAttendance } = require('../controllers/student.controller');
+const { addStudent, addStudentsBulk, getAllStudents, getStudentById, updateStudent, deleteStudent, loginStudent, resetPassword, verifyStudentDetails, markAttendance, getStudentStats } = require('../controllers/student.controller');
 const { protect } = require('../middleware/auth'); // Admin protection likely needed
 
 // All routes here should probably be protected for Admin use
@@ -25,6 +25,8 @@ router.route('/:id')
     .get(protect, getStudentById)
     .put(protect, updateStudent)
     .delete(protect, deleteStudent);
+
+router.get('/:id/stats', protect, getStudentStats);
 
 router.post('/:id/attendance', protect, markAttendance);
 

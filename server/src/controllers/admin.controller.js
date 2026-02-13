@@ -255,9 +255,14 @@ exports.getMonthlyLeaderboard = async (req, res) => {
                     ? ((perf.totalScore / perf.totalQuestions) * 100).toFixed(2)
                     : 0;
 
+                const firstName = student.firstName || '';
+                const lastName = student.lastName || '';
+                const fullName = `${firstName} ${lastName}`.trim();
+                const displayName = fullName || student.email || 'Student';
+
                 return {
                     studentId: student._id,
-                    name: student.name,
+                    name: displayName,
                     regNo: student.regNo,
                     phone: student.phone,
                     email: student.email,

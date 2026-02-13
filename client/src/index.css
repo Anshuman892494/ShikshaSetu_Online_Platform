@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
 body {
-    background-color: #f5f5f5; /* Light Gray */
-    color: #132d1f; /* Dark Green Text */
+    background-color: #0f1115;
+    /* Re-aligned to dark theme */
+    color: #ffffff;
+}
+
+@layer utilities {
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 }

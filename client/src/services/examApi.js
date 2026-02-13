@@ -77,6 +77,7 @@ export const resetStudentPassword = (data) => api.post("/students/reset-password
 export const verifyStudentDetails = (data) => api.post("/students/verify-details", data);
 export const registerStudent = (data) => api.post("/students/register", data);
 export const markAttendance = (id) => api.post(`/students/${id}/attendance`);
+export const getStudentStats = (id) => api.get(`/students/${id}/stats`);
 
 export const sendFeedback = (data) => api.post("/feedback/send", data);
 

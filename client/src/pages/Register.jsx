@@ -77,7 +77,7 @@ const Register = () => {
             <div className="z-10 w-full max-w-6xl">
                 <div className="text-center">
                     <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-600 mb-4 tracking-tight drop-shadow-sm filter">
-                        {APP_NAME} <span className="text-gray-100">Pathshala</span>
+                        {APP_NAME} <span className="text-gray-100">Setu</span>
                     </h1>
                     <div className="h-1 w-24 bg-green-600 mx-auto rounded-full mb-10"></div>
                 </div>

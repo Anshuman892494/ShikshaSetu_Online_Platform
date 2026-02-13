@@ -1,4 +1,5 @@
 const Student = require('../models/Student');
+const Result = require('../models/Result');
 const bcrypt = require('bcryptjs');
 
 // @desc    Add a Single Student
@@ -378,6 +379,88 @@ exports.markAttendance = async (req, res) => {
         await student.save();
 
         res.json({ message: 'Attendance marked successfully', today, attendance: student.attendance });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get Student Stats for Progress Page
+// @route   GET /api/students/:id/stats
+exports.getStudentStats = async (req, res) => {
+    try {
+        const student = await Student.findById(req.params.id);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        // 1. Get All Results for this student
+        const results = await Result.find({ studentId: req.params.id });
+
+        // 2. Calculate Stats
+        const examsAttempted = results.length;
+        const totalQuestions = results.reduce((sum, r) => sum + r.totalQuestions, 0);
+        const totalScore = results.reduce((sum, r) => sum + r.score, 0);
+        const totalCorrect = results.reduce((sum, r) => sum + r.correct, 0);
+
+        const averageScore = totalQuestions > 0
+            ? Math.round((totalScore / totalQuestions) * 100)
+            : 0;
+
+        // Total Points calculation: 10 points per exam attempted + bonus for performance?
+        // Let's stick to a simple formula: totalScore * some factor or just totalScore
+        const totalPoints = results.length * 10;
+
+        // 3. Attendance Calculation
+        const attendance = student.attendance || [];
+        const now = new Date();
+        const currentMonth = now.getMonth() + 1;
+        const currentYear = now.getFullYear();
+
+        const daysInMonthLabel = new Date(currentYear, currentMonth, 0).getDate();
+        const presentInMonth = attendance.filter(date => {
+            const [y, m] = date.split('-').map(Number);
+            return y === currentYear && m === currentMonth;
+        }).length;
+
+        const monthlyAttendance = Math.round((presentInMonth / daysInMonthLabel) * 100);
+        const yearlyAttendance = Math.round((attendance.length / 365) * 100);
+
+        // 4. Calculate Rank (Simplified Global Ranking)
+        const allResults = await Result.find({});
+        const studentPerformance = {};
+
+        for (const result of allResults) {
+            const sId = result.studentId.toString();
+            if (!studentPerformance[sId]) {
+                studentPerformance[sId] = { totalQuestions: 0, totalScore: 0 };
+            }
+            studentPerformance[sId].totalQuestions += result.totalQuestions;
+            studentPerformance[sId].totalScore += result.score;
+        }
+
+        const rankings = Object.entries(studentPerformance).map(([id, perf]) => ({
+            id,
+            avg: perf.totalQuestions > 0 ? (perf.totalScore / perf.totalQuestions) : 0
+        })).sort((a, b) => b.avg - a.avg);
+
+        const rankIndex = rankings.findIndex(r => r.id === req.params.id);
+        const rank = rankIndex !== -1 ? rankIndex + 1 : 'NR';
+
+        res.json({
+            studentId: student._id,
+            regNo: student.regNo,
+            stats: {
+                rank,
+                averageScore,
+                examsAttempted,
+                totalPoints,
+                monthlyAttendance,
+                yearlyAttendance,
+                totalCorrect,
+                totalQuestions
+            }
+        });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

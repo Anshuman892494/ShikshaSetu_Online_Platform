@@ -28,7 +28,7 @@ const About = () => {
             <Sidebar />
             <nav className="bg-gray-800 shadow-lg px-8 py-5 flex justify-between items-center fixed top-0 left-0 right-0 z-50 h-20 text-white mb-8 border-b border-gray-700 ml-64">
                 <div className="flex items-center space-x-6">
-                    <h1 className="text-2xl font-bold text-white tracking-tight">About GaonPathshala</h1>
+                    <h1 className="text-2xl font-bold text-white tracking-tight">About शिक्षा Setu</h1>
                 </div>
                 <button onClick={() => navigate(-1)} className="text-gray-400 hover:text-white transition-colors font-medium border border-gray-600/50 px-4 py-2 rounded-lg hover:bg-gray-700/50 cursor-pointer">
                     Back
@@ -46,7 +46,7 @@ const About = () => {
                                 Since 2024
                             </span>
                             <h1 className="text-5xl font-extrabold text-white mb-2 tracking-tight">
-                                {APP_NAME}<span className="text-green-500">Pathshala</span>
+                                {APP_NAME}<span className="text-green-500">Setu</span>
                             </h1>
                             <p className="text-gray-400 text-lg font-light max-w-lg mx-auto">Empowering the next generation of IT professionals through accessible education.</p>
                         </div>
@@ -61,7 +61,7 @@ const About = () => {
                                 </div>
                                 <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">Our Mission</h2>
                                 <p className="text-gray-400 leading-relaxed font-light">
-                                    GaonPathshala is dedicated to bridging the educational gap by providing state-of-the-art computer education and professional courses to every corner of the nation, especially targeting students who lack access to premium resources.
+                                    GaonSetu is dedicated to bridging the educational gap by providing state-of-the-art computer education and professional courses to every corner of the nation, especially targeting students who lack access to premium resources.
                                 </p>
                             </section>
 
@@ -167,12 +167,12 @@ const About = () => {
                         <p className="text-gray-500 text-sm italic">"Education is the most powerful weapon which you can use to change the world."</p>
                         <div className="flex items-center space-x-3 bg-gray-900/50 px-6 py-3 rounded-full border border-gray-700">
                             <span className="material-symbols-outlined text-green-500 animate-pulse">code</span>
-                            <span className="text-gray-300 font-semibold tracking-wide uppercase text-xs">GaonPathshala Dev Team</span>
+                            <span className="text-gray-300 font-semibold tracking-wide uppercase text-xs">GaonSetu Dev Team</span>
                         </div>
                     </div>
 
                     <div className="bg-gray-900/50 p-6 text-center border-t border-gray-800 text-xs text-gray-600">
-                        &copy; {new Date().getFullYear()} GaonPathshala. All Rights Reserved.
+                        &copy; {new Date().getFullYear()} GaonSetu. All Rights Reserved.
                     </div>
                 </div>
             </div>

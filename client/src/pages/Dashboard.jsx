@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import Loader from '../components/Loader';
-import { getLeaderboard, getStudentById, updateStudent } from '../services/examApi';
+import { getLeaderboard, getStudentById, updateStudent, markAttendance } from '../services/examApi';
 import { APP_NAME } from '../utils/constants';
 
 const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
@@ -292,7 +292,7 @@ const ProfileCard = ({ user, onEditClick }) => (
         </div>
 
         <p className="text-gray-400 text-xs leading-relaxed text-center font-light italic opacity-80">
-            "{user?.bio || "Learning to code at GoanPathshala. Exploring future possibilities."}"
+            "{user?.bio || "Learning to code at GoanSetu. Exploring future possibilities."}"
         </p>
 
         <button
@@ -318,35 +318,59 @@ const ProfileCard = ({ user, onEditClick }) => (
 );
 
 const HeatmapSection = ({ attendance = [] }) => {
-    const currentYear = new Date().getFullYear();
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonthIdx = now.getMonth();
 
-    // Generate 12 months with real date logic
-    const monthConfigs = [
-        { name: "Jan", days: 31 }, { name: "Feb", days: 28 }, { name: "Mar", days: 31 },
-        { name: "Apr", days: 30 }, { name: "May", days: 31 }, { name: "Jun", days: 30 },
-        { name: "Jul", days: 31 }, { name: "Aug", days: 31 }, { name: "Sep", days: 30 },
-        { name: "Oct", days: 31 }, { name: "Nov", days: 30 }, { name: "Dec", days: 31 }
-    ];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-    const monthsData = monthConfigs.map((m, midx) => {
+    // Check leap year for Feb
+    if ((currentYear % 4 === 0 && currentYear % 100 !== 0) || currentYear % 400 === 0) {
+        monthDays[1] = 29;
+    }
+
+    // Generate 7 months window (3 before, current, 3 after)
+    const monthsData = [];
+    for (let i = -3; i <= 3; i++) {
+        let targetMonthIdx = (currentMonthIdx + i + 12) % 12;
+        let targetYear = currentYear;
+
+        // Adjust year if we wrap around
+        if (currentMonthIdx + i < 0) targetYear--;
+        else if (currentMonthIdx + i > 11) targetYear++;
+
+        const name = monthNames[targetMonthIdx];
+        const days = monthDays[targetMonthIdx];
         const weeks = [];
         let currentWeek = [];
-        const monthNum = (midx + 1).toString().padStart(2, '0');
+        const monthNum = (targetMonthIdx + 1).toString().padStart(2, '0');
 
-        for (let d = 1; d <= m.days; d++) {
+        for (let d = 1; d <= days; d++) {
             const dayStr = d.toString().padStart(2, '0');
-            const dateKey = `${currentYear}-${monthNum}-${dayStr}`;
+            const dateKey = `${targetYear}-${monthNum}-${dayStr}`;
             const isPresent = attendance.includes(dateKey);
 
             currentWeek.push({ day: d, date: dateKey, isPresent });
 
-            if (currentWeek.length === 7 || d === m.days) {
+            if (currentWeek.length === 7 || d === days) {
                 weeks.push(currentWeek);
                 currentWeek = [];
             }
         }
-        return { ...m, weeks };
-    });
+        monthsData.push({ name, days, weeks, year: targetYear, monthIdx: targetMonthIdx });
+    }
+
+    // Monthly Calculation
+    const currentMonthData = monthsData.find(m => m.monthIdx === currentMonthIdx && m.year === currentYear);
+    const daysInMonth = currentMonthData ? currentMonthData.days : 30;
+    const presentInMonth = attendance.filter(date => {
+        const [y, m] = date.split('-').map(Number);
+        return y === currentYear && m === (currentMonthIdx + 1);
+    }).length;
+
+    const monthlyPercentage = Math.round((presentInMonth / daysInMonth) * 100);
+    const yearlyPercentage = Math.round((attendance.length / 365) * 100);
 
     return (
         <div className="bg-gray-800/20 backdrop-blur-sm rounded-[2rem] p-8 border border-gray-800 group hover:border-green-500/20 transition-all duration-700 relative overflow-hidden">
@@ -354,41 +378,47 @@ const HeatmapSection = ({ attendance = [] }) => {
 
             <div className="flex justify-between items-end mb-8">
                 <div>
-                    <h3 className="text-2xl font-bold text-white tracking-tight">
-                        {attendance.length} <span className="text-gray-500 font-light italic text-sm ml-1">Days Present</span>
+                    <h3 className="text-xl font-bold text-white tracking-tight">
+                        {attendance.length} <span className="text-gray-500 font-light italic text-xs ml-1">Days Present</span>
                     </h3>
                 </div>
 
                 <div className="flex items-center gap-6">
                     <div className="text-right">
-                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Attendance</p>
-                        <p className="text-lg font-black text-white">{Math.round((attendance.length / 365) * 100)}% <span className="text-xs font-normal text-gray-500">Yearly</span></p>
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">This Month</p>
+                        <p className="text-lg font-black text-white">{monthlyPercentage}% <span className="text-xs font-normal text-gray-500">Attendance</span></p>
+                    </div>
+                    <div className="text-right border-l border-gray-800 pl-6">
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Yearly Avg</p>
+                        <p className="text-sm font-bold text-gray-400">{yearlyPercentage}%</p>
                     </div>
                 </div>
             </div>
 
-            <div className="flex justify-between items-start gap-2 min-w-full">
-                {monthsData.map((month, midx) => (
-                    <div key={midx} className="flex-1 flex flex-col gap-3">
-                        <span className="text-[8px] font-black text-gray-600 uppercase tracking-tighter text-center">{month.name}</span>
+            <div className="overflow-x-auto pb-4 -mx-1 scrollbar-hide">
+                <div className="flex justify-center items-start gap-6 min-w-max px-2">
+                    {monthsData.map((month, midx) => (
+                        <div key={midx} className="flex-none flex flex-col gap-3">
+                            <span className="text-[8px] font-black text-gray-600 uppercase tracking-tighter text-center">{month.name}</span>
 
-                        <div className="flex gap-1 justify-center">
-                            {month.weeks.map((week, widx) => (
-                                <div key={widx} className="flex flex-col gap-1">
-                                    {week.map((dayData, didx) => (
-                                        <div
-                                            key={didx}
-                                            className={`w-[11px] h-[11px] rounded-[2px] transition-all duration-500 hover:scale-125 hover:z-10 cursor-pointer
-                                                ${dayData.isPresent ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]' : 'bg-gray-800/40'}`}
-                                            title={dayData.date}
-                                        >
-                                        </div>
-                                    ))}
-                                </div>
-                            ))}
+                            <div className="flex gap-1 justify-center">
+                                {month.weeks.map((week, widx) => (
+                                    <div key={widx} className="flex flex-col gap-1">
+                                        {week.map((dayData, didx) => (
+                                            <div
+                                                key={didx}
+                                                className={`w-[12px] h-[12px] rounded-[3px] transition-all duration-500 hover:scale-150 hover:z-10 cursor-pointer
+                                                    ${dayData.isPresent ? 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)]' : 'bg-gray-800/40 hover:bg-gray-700/60'}`}
+                                                title={dayData.date}
+                                            >
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             <div className="mt-8 pt-6 border-t border-gray-800/50 flex justify-between items-center text-[9px] font-black text-gray-500 uppercase tracking-widest opacity-60">
@@ -470,7 +500,7 @@ const Dashboard = () => {
             } catch (error) {
                 console.error('Failed to mark attendance:', error);
             }
-        }, 60000); // 1 minute (60,000 ms)
+        }, 300000); // 5 minutes (300,000 ms)
 
         return () => clearTimeout(timer);
     }, [userData?.studentId]);
@@ -548,17 +578,6 @@ const Dashboard = () => {
                                     ))}
                                 </div>
                             </section>
-
-                            {/* Continue CTA */}
-                            <div className="mt-12 flex justify-center">
-                                <Link
-                                    to="/courses"
-                                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-2xl transition-all shadow-xl shadow-green-900/20 flex items-center text-sm uppercase tracking-widest group"
-                                >
-                                    Continue Learning
-                                    <span className="material-symbols-outlined ml-2 text-xl group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
-                                </Link>
-                            </div>
                         </div>
                     </div>
                 </main>

@@ -94,8 +94,8 @@ const Leaderboard = () => {
                                         <thead className="bg-gray-700">
                                             <tr>
                                                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">Rank</th>
-                                                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">Student</th>
-                                                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider">Reg No</th>
+                                                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">Name</th>
+                                                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider">Email</th>
                                                 <th className="px-6 py-4 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider">Exams</th>
                                                 <th className="px-6 py-4 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider">Score</th>
                                                 <th className="px-6 py-4 text-center text-sm font-semibold text-gray-300 uppercase tracking-wider">Average</th>
@@ -135,8 +135,8 @@ const Leaderboard = () => {
                                                                             )}
                                                                         </div>
                                                                     </td>
-                                                                    <td className="px-6 py-4 text-center">
-                                                                        <span className="font-mono text-sm text-gray-400">{student.regNo}</span>
+                                                                    <td className="px-6 py-4 text-gray-400 text-sm">
+                                                                        {student.email}
                                                                     </td>
                                                                     <td className="px-6 py-4 text-center text-gray-300">{student.totalExams}</td>
                                                                     <td className="px-6 py-4 text-center">
@@ -163,7 +163,7 @@ const Leaderboard = () => {
                                                         {showSeparator && myRank && (
                                                             <>
                                                                 <tr className="bg-gray-900">
-                                                                    <td colSpan="8" className="px-6 py-3 text-center text-gray-500 text-sm">
+                                                                    <td colSpan="6" className="px-6 py-3 text-center text-gray-500 text-sm">
                                                                         <div className="flex items-center justify-center">
                                                                             <div className="flex-1 border-t border-gray-700"></div>
                                                                             <span className="px-4">• • •</span>
@@ -183,8 +183,8 @@ const Leaderboard = () => {
                                                                             <span className="ml-2 text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full">You</span>
                                                                         </div>
                                                                     </td>
-                                                                    <td className="px-6 py-4 text-center">
-                                                                        <span className="font-mono text-sm text-gray-400">{myRank.regNo}</span>
+                                                                    <td className="px-6 py-4 text-gray-400 text-sm">
+                                                                        {myRank.email}
                                                                     </td>
                                                                     <td className="px-6 py-4 text-center text-gray-300">{myRank.totalExams}</td>
                                                                     <td className="px-6 py-4 text-center text-gray-300">{myRank.totalQuestions}</td>

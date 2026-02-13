@@ -18,6 +18,7 @@ import About from './pages/About';
 import Feedback from './pages/Feedback';
 import Notes from './pages/Notes';
 import Courses from './pages/Courses';
+import Progress from './pages/Progress';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import { APP_NAME } from './utils/constants';
@@ -79,6 +80,7 @@ function App() {
         <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
         <Route path="/courses" element={<PrivateRoute><Courses /></PrivateRoute>} />
         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/progress" element={<PrivateRoute><Progress /></PrivateRoute>} />
         <Route path="/notes" element={<PrivateRoute studentOnly><Notes /></PrivateRoute>} />
 
         <Route path="/404" element={<NotFound />} />

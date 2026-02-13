@@ -19,7 +19,7 @@ const Home = () => {
                                 Leading the Education Revolution
                             </span>
                             <h1 className="text-5xl font-extrabold mb-6 text-white tracking-tighter">
-                                {APP_NAME}<span className="text-green-500">Pathshala</span>
+                                {APP_NAME}<span className="text-green-500">Setu</span>
                             </h1>
                             <p className="text-gray-400 text-xl max-w-2xl leading-relaxed font-light">
                                 Empowering students through quality education and technology. We bring the best learning resources to your doorstep.
@@ -36,7 +36,7 @@ const Home = () => {
                                     Our Mission & Vision
                                 </h2>
                                 <p className="text-gray-400 text-lg leading-relaxed mb-6 font-light">
-                                    GaonPathshala is dedicated to bridging the educational gap by providing state-of-the-art computer education and professional courses to every corner of the nation.
+                                    GaonSetu is dedicated to bridging the educational gap by providing state-of-the-art computer education and professional courses to every corner of the nation.
                                 </p>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 group hover:border-green-500/30 transition-colors">
@@ -72,7 +72,7 @@ const Home = () => {
                     <div className="mt-20 mb-20">
                         <div className="text-center mb-12">
                             <h2 className="text-4xl font-bold text-white mb-4 tracking-tighter">
-                                Why Did We Start <span className="text-green-500">{APP_NAME}Pathshala?</span>
+                                Why Did We Start <span className="text-green-500">{APP_NAME}Setu?</span>
                             </h2>
                             <p className="text-gray-400 text-lg font-light italic">Here are some key challenges predominantly experienced by the students.</p>
                         </div>
@@ -101,12 +101,12 @@ const Home = () => {
                         <h2 className="text-4xl font-bold text-white mb-12 tracking-tighter">Meet Our Expert Mentors</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-8 gap-y-12">
                             {[
-                                { name: "Prerna Prem", role: "CEO @ GaonPathshala", company: "GoanPathshala", image: "https://media.licdn.com/dms/image/v2/D4E03AQFnBQYrtk6dyA/profile-displayphoto-scale_200_200/B4EZqvCL3AHgAY-/0/1763873178731?e=1772668800&v=beta&t=FPc1unJ7o58VgYRTbHJ4BYtVP9yAkYdcqZjxzJ5SthE" },
-                                { name: "Ganesh Lokhande", role: "SDE @ GaonPathshala", company: "GoanPathshala", image: "https://media.licdn.com/dms/image/v2/D5603AQFiUytXp9704w/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1684919727537?e=1772668800&v=beta&t=L3y1_Z3KefFijmmC4mwgztvEaFrNHSLZ20liSFnUeLo" },
-                                { name: "Scahin Singh", role: "Trainer", company: "GoanPathshala", image: "https://media.licdn.com/dms/image/v2/D5603AQEDeC8bYbgHlw/profile-displayphoto-scale_200_200/B56ZwOFbc.JIAc-/0/1769762832076?e=1772668800&v=beta&t=v8_rQMiitmu5FRoimKi2CAFMr3GqZZzfWx0jElih_q4" },
-                                { name: "Anshuman Varma", role: "Trainer", company: "GoanPathshala", image: "https://avatars.githubusercontent.com/u/180281804?v=4" },
-                                { name: "Tanvi Sharma", role: "Trainer", company: "GoanPathshala", image: "https://www.shutterstock.com/image-photo/profile-picture-studio-headshot-business-260nw-2310388241.jpg" },
-                                { name: "Aditi Shukla", role: "Trainer", company: "GoanPathshala", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP_139gKXq2t2wCfM4QPv4s-BjREMGhiK3lw&s" },
+                                { name: "Prerna Prem", role: "CEO @ GaonSetu", company: "GoanSetu", image: "https://media.licdn.com/dms/image/v2/D4E03AQFnBQYrtk6dyA/profile-displayphoto-scale_200_200/B4EZqvCL3AHgAY-/0/1763873178731?e=1772668800&v=beta&t=FPc1unJ7o58VgYRTbHJ4BYtVP9yAkYdcqZjxzJ5SthE" },
+                                { name: "Ganesh Lokhande", role: "SDE @ GaonSetu", company: "GoanSetu", image: "https://media.licdn.com/dms/image/v2/D5603AQFiUytXp9704w/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1684919727537?e=1772668800&v=beta&t=L3y1_Z3KefFijmmC4mwgztvEaFrNHSLZ20liSFnUeLo" },
+                                { name: "Scahin Singh", role: "Trainer", company: "GoanSetu", image: "https://media.licdn.com/dms/image/v2/D5603AQEDeC8bYbgHlw/profile-displayphoto-scale_200_200/B56ZwOFbc.JIAc-/0/1769762832076?e=1772668800&v=beta&t=v8_rQMiitmu5FRoimKi2CAFMr3GqZZzfWx0jElih_q4" },
+                                { name: "Anshuman Varma", role: "Trainer", company: "GoanSetu", image: "https://avatars.githubusercontent.com/u/180281804?v=4" },
+                                { name: "Tanvi Sharma", role: "Trainer", company: "GoanSetu", image: "https://www.shutterstock.com/image-photo/profile-picture-studio-headshot-business-260nw-2310388241.jpg" },
+                                { name: "Aditi Shukla", role: "Trainer", company: "GoanSetu", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP_139gKXq2t2wCfM4QPv4s-BjREMGhiK3lw&s" },
                             ].map((mentor, idx) => (
                                 <div key={idx} className="flex flex-col items-center group">
                                     <div className="relative mb-4">

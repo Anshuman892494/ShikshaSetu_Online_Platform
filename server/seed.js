@@ -20,6 +20,7 @@ const seedAdmin = async () => {
 
         // No longer deleting all admins
         // await Admin.deleteMany({});
+        // ganesh lokhande 
 
         for (const adminData of admins) {
             const existingAdmin = await Admin.findOne({ phone: adminData.phone });

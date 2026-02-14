@@ -106,10 +106,9 @@ const Progress = () => {
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-gray-800/50">
                             <div>
                                 <div className="flex items-center gap-3 mb-2">
-                                    <span className="w-1 h-8 bg-green-500 rounded-full shadow-[0_0_15px_rgba(34,197,94,0.5)]"></span>
                                     <h1 className="text-3xl font-black text-white tracking-tight">Analytics Dashboard</h1>
                                 </div>
-                                <p className="text-gray-400 text-sm font-medium tracking-wide ml-4">Analyze your academic journey and performance metrics.</p>
+                                <p className="text-gray-400 text-sm font-medium tracking-wide">Analyze your academic journey and performance metrics.</p>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="bg-gray-800/40 backdrop-blur-md border border-gray-700/50 px-6 py-3 rounded-2xl">

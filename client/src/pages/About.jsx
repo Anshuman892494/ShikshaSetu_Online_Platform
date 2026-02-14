@@ -42,9 +42,6 @@ const About = () => {
                         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30"></div>
                         <div className="absolute inset-0 bg-green-500/10 mix-blend-overlay"></div>
                         <div className="relative z-10 text-center px-6">
-                            <span className="bg-green-500/20 text-green-400 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest mb-4 inline-block border border-green-500/20">
-                                Since 2024
-                            </span>
                             <h1 className="text-5xl font-extrabold text-white mb-2 tracking-tight">
                                 {APP_NAME}<span className="text-green-500">Setu</span>
                             </h1>
@@ -83,7 +80,7 @@ const About = () => {
                                 Programs we specialize in
                             </h2>
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                {["O Level (NIELIT)", "ADCA", "DCA", "Tally Prime", "OMC", "CCC"].map(tag => (
+                                {["DSA", "Full Stack", "Mern Stack", "Networking", "Operating System"].map(tag => (
                                     <div key={tag} className="bg-gray-800 border border-gray-700 px-6 py-4 rounded-2xl text-sm font-medium hover:border-green-500/50 text-gray-400 hover:text-white transition-all flex items-center gap-2">
                                         <span className="material-symbols-outlined text-green-500 text-xl">check_circle</span>
                                         {tag}

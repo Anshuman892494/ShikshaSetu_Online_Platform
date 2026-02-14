@@ -87,10 +87,6 @@ const CreateExam = () => {
                     // Normalize row length just in case
                     if (row.length < 2) return null;
 
-                    // Check for Type column (assuming it might be the first column if present, or we check if we have 7 columns vs 6)
-                    // Let's assume a standard format: Type | Question | Opt1 | Opt2 | Opt3 | Opt4 | Correct
-                    // Or: Question | Opt1 | Opt2 | Opt3 | Opt4 | Correct (Legacy)
-
                     let type = 'MCQ';
                     let questionText = '';
                     let options = ['', '', '', ''];
@@ -108,12 +104,6 @@ const CreateExam = () => {
                         // For T/F, options are fixed
                         if (type === 'True/False') {
                             options = ['True', 'False'];
-                            // Correct Answer is at index 6 (Type, Q, O1, O2, O3, O4, Correct) or maybe index 2?
-                            // Let's assume the standard rigid column structure for simplicity:
-                            // Col 0: Type
-                            // Col 1: Question
-                            // Col 2-5: Options (Ignored for T/F)
-                            // Col 6: Correct Answer
                             correctIndex = (parseInt(row[6]) || 1) - 1;
                         } else {
                             options = [row[2], row[3], row[4], row[5]];
@@ -224,10 +214,6 @@ const CreateExam = () => {
                             >
                                 <option value="All Exam">All Exam</option>
                                 <option value="Class Test">Class Test</option>
-                                <option value="CCC">CCC</option>
-                                <option value="ADCA">ADCA</option>
-                                <option value="O Level">O Level</option>
-                                <option value="Tally">Tally</option>
                             </select>
                             <p className="text-xs text-gray-400 mt-1">Select where this exam should be displayed.</p>
                         </div>

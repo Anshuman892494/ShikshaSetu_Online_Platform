@@ -15,9 +15,6 @@ const Home = () => {
                     <div className="relative rounded-3xl overflow-hidden mb-12 shadow-2xl border border-gray-800 bg-gray-800/50 backdrop-blur-sm">
                         <div className="absolute inset-0 bg-gradient-to-br from-green-900/40 to-transparent z-0"></div>
                         <div className="relative z-10 p-12 flex flex-col items-center text-center">
-                            <span className="bg-green-500/10 text-green-400 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest mb-6 border border-green-500/20">
-                                Leading the Education Revolution
-                            </span>
                             <h1 className="text-5xl font-extrabold mb-6 text-white tracking-tighter">
                                 {APP_NAME}<span className="text-green-500">Setu</span>
                             </h1>

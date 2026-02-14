@@ -88,7 +88,7 @@ exports.resetPassword = async (req, res) => {
 exports.getAllResults = async (req, res) => {
     try {
         const results = await Result.find()
-            .populate('studentId', 'name regNo')
+            .populate('studentId', 'firstName lastName name regNo')
             .sort({ updatedAt: -1 });
 
         res.json(results);
@@ -119,7 +119,7 @@ exports.deleteResult = async (req, res) => {
 exports.getResultById = async (req, res) => {
     try {
         const result = await Result.findById(req.params.id)
-            .populate('studentId', 'name regNo')
+            .populate('studentId', 'firstName lastName name regNo')
             .populate('examId', 'securityEnabled')
             .populate('answers.questionId');
 
@@ -140,7 +140,7 @@ exports.getStudentReportCards = async (req, res) => {
         const Student = require('../models/Student');
 
         // Get all students
-        const students = await Student.find().select('-password').sort({ name: 1 });
+        const students = await Student.find().select('-password').sort({ firstName: 1 });
 
         // For each student, aggregate their results
         const reportCards = await Promise.all(students.map(async (student) => {
@@ -256,9 +256,7 @@ exports.getMonthlyLeaderboard = async (req, res) => {
                     : 0;
 
                 const firstName = student.firstName || '';
-                const lastName = student.lastName || '';
-                const fullName = `${firstName} ${lastName}`.trim();
-                const displayName = fullName || student.email || 'Student';
+                const displayName = firstName || student.email || 'Student';
 
                 return {
                     studentId: student._id,

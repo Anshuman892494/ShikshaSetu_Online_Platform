@@ -38,7 +38,15 @@ const studentSchema = new mongoose.Schema({
         default: []
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+
+// Virtual for full name
+// Virtual for name (User requested only First Name)
+studentSchema.virtual('name').get(function () {
+    return this.firstName;
 });
 
 module.exports = mongoose.model('Student', studentSchema);

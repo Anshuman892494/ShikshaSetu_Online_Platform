@@ -5,8 +5,6 @@ const { protect } = require('../middleware/auth'); // Admin protection likely ne
 
 // All routes here should probably be protected for Admin use
 // Assuming 'protect' middleware checks for valid token (Admin or otherwise)
-// If we need specific Admin check, we might need an 'admin' middleware or check role in 'protect'
-
 router.route('/')
     .get(protect, getAllStudents)
     .post(protect, addStudent);

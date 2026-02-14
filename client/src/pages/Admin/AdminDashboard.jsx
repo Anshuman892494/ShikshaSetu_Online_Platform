@@ -26,8 +26,8 @@ const AdminDashboard = () => {
     // Student Form State
     const [showStudentModal, setShowStudentModal] = useState(false);
     const [showEditStudentModal, setShowEditStudentModal] = useState(false);
-    const [newStudent, setNewStudent] = useState({ name: '', regNo: '', phone: '', email: '', password: '' });
-    const [editingStudent, setEditingStudent] = useState({ _id: '', name: '', regNo: '', phone: '', email: '', password: '' });
+    const [newStudent, setNewStudent] = useState({ name: '', phone: '', email: '', password: '' });
+    const [editingStudent, setEditingStudent] = useState({ _id: '', name: '', phone: '', email: '', password: '' });
     const [bulkFile, setBulkFile] = useState(null);
     const [studentSearchQuery, setStudentSearchQuery] = useState('');
 
@@ -126,10 +126,23 @@ const AdminDashboard = () => {
     const handleAddStudent = async (e) => {
         e.preventDefault();
         try {
-            const res = await addStudent(newStudent);
+            // Split name into firstName and lastName
+            const nameParts = newStudent.name.trim().split(' ');
+            const firstName = nameParts[0];
+            const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '.';
+
+            const studentPayload = {
+                firstName,
+                lastName,
+                phone: newStudent.phone,
+                email: newStudent.email,
+                password: newStudent.password
+            };
+
+            const res = await addStudent(studentPayload);
             setStudents([res.data, ...students]);
             setShowStudentModal(false);
-            setNewStudent({ name: '', regNo: '', phone: '', email: '', password: '' });
+            setNewStudent({ name: '', phone: '', email: '', password: '' });
             alert("Student added successfully");
         } catch (error) {
             alert(error.response?.data?.message || "Failed to add student");
@@ -152,7 +165,6 @@ const AdminDashboard = () => {
             // Only include password in update if it's been changed
             const updateData = {
                 name: editingStudent.name,
-                regNo: editingStudent.regNo,
                 phone: editingStudent.phone,
                 email: editingStudent.email
             };
@@ -163,7 +175,7 @@ const AdminDashboard = () => {
             const res = await updateStudent(editingStudent._id, updateData);
             setStudents(students.map(s => s._id === editingStudent._id ? res.data : s));
             setShowEditStudentModal(false);
-            setEditingStudent({ _id: '', name: '', regNo: '', phone: '', email: '', password: '' });
+            setEditingStudent({ _id: '', name: '', phone: '', email: '', password: '' });
             alert("Student updated successfully");
         } catch (error) {
             alert(error.response?.data?.message || "Failed to update student");
@@ -185,12 +197,20 @@ const AdminDashboard = () => {
 
                 // Map columns if necessary (User provided: regNo, name, phone, password)
                 // Assuming the excel/csv headers match the keys or are close
-                const formattedData = data.map(item => ({
-                    regNo: item.regNo || item['Reg No'] || item['Registration Number'] || item['reg_no'],
-                    name: item.name || item['Name'] || item['Student Name'],
-                    phone: item.phone || item['Phone'] || item['Mobile'],
-                    password: item.password || item['Password']
-                }));
+                const formattedData = data.map(item => {
+                    const fullName = item.name || item['Name'] || item['Student Name'] || '';
+                    const nameParts = fullName.trim().split(' ');
+                    const firstName = nameParts[0];
+                    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '.';
+
+                    return {
+                        firstName,
+                        lastName,
+                        phone: item.phone || item['Phone'] || item['Mobile'],
+                        password: item.password || item['Password'],
+                        email: item.email || item['Email']
+                    };
+                });
 
                 const res = await addStudentsBulk({ students: formattedData });
                 alert(`${res.data.results.added} students added. ${res.data.results.failed} failed.`);
@@ -224,7 +244,6 @@ const AdminDashboard = () => {
         if (!studentSearchQuery) return students;
         const query = studentSearchQuery.toLowerCase();
         return students.filter(student =>
-            student.regNo?.toLowerCase().includes(query) ||
             student.name?.toLowerCase().includes(query) ||
             student.phone?.toString().toLowerCase().includes(query) ||
             student.email?.toLowerCase().includes(query)
@@ -235,7 +254,6 @@ const AdminDashboard = () => {
         const filteredData = getFilteredResults();
         const worksheetData = filteredData.map(result => ({
             "Student Name": result.studentId ? result.studentId.name : 'Unknown',
-            "Reg No": result.studentId ? result.studentId.regNo : 'N/A',
             "Exam Title": result.examTitle,
             "Score": result.score,
             "Total Questions": result.totalQuestions,
@@ -274,7 +292,7 @@ const AdminDashboard = () => {
         <div className="min-h-screen bg-gray-900 text-gray-100">
             <nav className="bg-gray-800 shadow-lg px-8 py-5 flex justify-between items-center fixed top-0 left-0 right-0 z-10 h-20 text-white border-b border-gray-700">
                 <div className="flex items-center space-x-6">
-                    <span className="text-2xl font-bold text-red-600 tracking-tighter">{APP_NAME} <span className="text-white"> ExamPoint</span></span>
+                    <span className="text-2xl font-bold text-red-600 tracking-tighter">{APP_NAME} <span className="text-white"> Setu</span></span>
                     <div className="flex flex-col">
                         <span className="text-xl font-bold text-white tracking-tight leading-tight">{adminName}</span>
                         <span className="text-red-500 text-[10px] uppercase font-black tracking-widest leading-none">Administrator</span>
@@ -425,7 +443,6 @@ const AdminDashboard = () => {
                                 <thead className="bg-gray-700">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Student Name</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Reg No</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Exam Title</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Score</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date</th>
@@ -436,7 +453,6 @@ const AdminDashboard = () => {
                                     {getFilteredResults().map((result) => (
                                         <tr key={result._id} className="hover:bg-gray-750 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">{result.studentId ? result.studentId.name : 'Unknown User'}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{result.studentId ? result.studentId.regNo : 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{result.examTitle}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-red-500">{result.score}/{result.totalQuestions}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(result.updatedAt || result.createdAt).toLocaleString()}</td>
@@ -500,7 +516,6 @@ const AdminDashboard = () => {
                             <table className="min-w-full divide-y divide-gray-700">
                                 <thead className="bg-gray-700">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Reg No</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Phone</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Email</th>
@@ -511,7 +526,6 @@ const AdminDashboard = () => {
                                 <tbody className="bg-gray-800 divide-y divide-gray-700">
                                     {getFilteredStudents().map((student) => (
                                         <tr key={student._id} className="hover:bg-gray-750 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-400">{student.regNo}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-100">{student.name}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{student.phone || '-'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{student.email || '-'}</td>
@@ -539,10 +553,10 @@ const AdminDashboard = () => {
                         {/* Bulk Upload Hint */}
                         <div className="bg-gray-700/30 border border-gray-600 rounded-lg p-2 mt-4 text-xs">
                             <p className="text-gray-400 mb-1">
-                                <span className="font-semibold text-gray-300">Excel:</span> name | regNo | phone | email | password
+                                <span className="font-semibold text-gray-300">Excel:</span> name | phone | email | password
                             </p>
                             <p className="text-gray-500 font-mono">
-                                <span className="text-gray-400">Example:</span> Anshu | 123456 | 9876543210 | anshu@example.com | pass123
+                                <span className="text-gray-400">Example:</span> Anshu | 9876543210 | anshu@example.com | pass123
                             </p>
                         </div>
 
@@ -552,10 +566,6 @@ const AdminDashboard = () => {
                                 <div className="bg-gray-800 rounded-lg p-6 w-96 shadow-2xl border border-gray-700">
                                     <h3 className="text-xl font-bold mb-4 text-white">Add New Student</h3>
                                     <form onSubmit={handleAddStudent} className="space-y-4">
-                                        <div>
-                                            <label className="block text-gray-400 text-sm mb-1">Registration No</label>
-                                            <input type="text" required value={newStudent.regNo} onChange={e => setNewStudent({ ...newStudent, regNo: e.target.value })} className="w-full bg-gray-700 text-white rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Enter RegNo" />
-                                        </div>
                                         <div>
                                             <label className="block text-gray-400 text-sm mb-1">Full Name</label>
                                             <input type="text" required value={newStudent.name} onChange={e => setNewStudent({ ...newStudent, name: e.target.value })} className="w-full bg-gray-700 text-white rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Enter Name" />
@@ -587,10 +597,6 @@ const AdminDashboard = () => {
                                 <div className="bg-gray-800 rounded-lg p-6 w-96 shadow-2xl border border-gray-700">
                                     <h3 className="text-xl font-bold mb-4 text-white">Edit Student</h3>
                                     <form onSubmit={handleUpdateStudent} className="space-y-4">
-                                        <div>
-                                            <label className="block text-gray-400 text-sm mb-1">Registration No</label>
-                                            <input type="text" required value={editingStudent.regNo} onChange={e => setEditingStudent({ ...editingStudent, regNo: e.target.value })} className="w-full bg-gray-700 text-white rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Enter RegNo" />
-                                        </div>
                                         <div>
                                             <label className="block text-gray-400 text-sm mb-1">Full Name</label>
                                             <input type="text" required value={editingStudent.name} onChange={e => setEditingStudent({ ...editingStudent, name: e.target.value })} className="w-full bg-gray-700 text-white rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Enter Name" />
@@ -629,7 +635,6 @@ const AdminDashboard = () => {
                                 <thead className="bg-gray-700">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Student</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Reg No</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Exams Taken</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Total Questions</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Correct</th>
@@ -645,7 +650,6 @@ const AdminDashboard = () => {
                                         <React.Fragment key={report.studentId}>
                                             <tr className="hover:bg-gray-750 transition-colors">
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">{report.name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-400 font-medium">{report.regNo}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 font-bold text-center">{report.totalExams}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400 text-center">{report.totalQuestions}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-green-400 font-bold text-center">{report.totalCorrect}</td>
@@ -722,7 +726,6 @@ const AdminDashboard = () => {
                                 <thead className="bg-gray-700">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Reg No</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Started At</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Expires At</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
@@ -732,7 +735,6 @@ const AdminDashboard = () => {
                                     {sessions.map((session) => (
                                         <tr key={session._id} className="hover:bg-gray-750 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">{session.name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{session.regNo}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{new Date(session.createdAt).toLocaleString()}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{new Date(session.expiresAt).toLocaleDateString()}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -765,7 +767,6 @@ const AdminDashboard = () => {
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Rank</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Student</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Reg No</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Exams Taken</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Total Questions</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Correct</th>
@@ -783,7 +784,6 @@ const AdminDashboard = () => {
                                                 {student.rank > 3 && <span className="text-gray-400">#{student.rank}</span>}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">{student.name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-400 font-medium">{student.regNo}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 font-bold text-center">{student.totalExams}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400 text-center">{student.totalQuestions}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-green-400 font-bold text-center">{student.totalCorrect}</td>

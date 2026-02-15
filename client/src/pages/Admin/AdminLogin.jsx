@@ -62,8 +62,8 @@ const AdminLogin = () => {
     return (
         <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center p-6">
             <div className="text-center">
-                <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-600 mb-4 tracking-tight drop-shadow-sm filter">
-                    {APP_NAME} <span className="text-white">ExamPoint</span>
+                <h1 className="text-5xl font-extrabold text-transparent bg-clip-text pt-5 bg-gradient-to-r from-green-500 to-green-600 mb-4 tracking-tight drop-shadow-sm filter">
+                    {APP_NAME} <span className="text-white">Setu</span>
                 </h1>
                 <div className="h-1 w-24 bg-green-600 mx-auto rounded-full mb-4"></div>
                 <p className="text-white text-2xl font-bold mb-10 ">Admin Portal</p>
